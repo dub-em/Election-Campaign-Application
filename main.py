@@ -2,9 +2,18 @@ import tweepy
 import configparser
 import pandas as pd
 import psycopg2
+from datetime import date
+import datetime 
+
+
+today = datetime.date.today()
+week_ago = datetime.date.today() - datetime.timedelta(days=7)
+yester = datetime.date.today() - datetime.timedelta(days=1)
+print(yester)
 
 config = configparser.ConfigParser()
 config.read("config.ini")
+
 
 def get_data():
     api_key = config['twitter']['api_key']
@@ -21,9 +30,9 @@ def get_data():
     #keywords = ['Buhari','APC', 'PeterObi','Tinubu','Atiku']
     #it seems the api does not return every tweet containing at least one or every keyword, it returns the only tweets that contains every keyword
     #solution was to use the OR in the keywords string as this is for tweets search only and might give errors in pure python
-    limit = 10000
+    limit = 1000000
 
-    tweets = tweepy.Cursor(api.search_tweets, q = keywords,count = 200, tweet_mode = 'extended',geocode='9.0820,8.6753,450mi', until='2022-09-30').items(limit)
+    tweets = tweepy.Cursor(api.search_tweets, q = keywords,count = 200, tweet_mode = 'extended',geocode='9.0820,8.6753,450mi', until=week_ago).items(limit)
 
     columns = ['time_created', 'screen_name','name', 'tweet','loca_tion', 'descrip_tion','verified','followers', 'source','geo_enabled','retweet_count','truncated','lang','likes']
     data = []
@@ -59,7 +68,7 @@ def postgre_push():
     cursor = conn.cursor()
 
 
-    sql = ''' CREATE TABLE IF NOT EXISTS election 
+    sql = ''' CREATE TABLE IF NOT EXISTS election_tweets
             (    name varchar(100) NOT NULL,
                 time_created timestamp,
                 screen_name varchar(100),
@@ -80,15 +89,15 @@ def postgre_push():
 
     cursor.execute(sql)
 
-    sql2 = '''COPY election(time_created,screen_name,name,tweet,loca_tion,descrip_tion,verified,followers,source,geo_enabled,retweet_count,truncated,lang,likes)
+    sql2 = '''COPY election_tweets(time_created,screen_name,name,tweet,loca_tion,descrip_tion,verified,followers,source,geo_enabled,retweet_count,truncated,lang,likes)
     FROM 'C:/Users/HP/Downloads/Primis/tweets.csv' DELIMITER ',' CSV HEADER;''' 
 
     cursor.execute(sql2)
 
-    sql3 = '''select * from election;'''
-    cursor.execute(sql3)
-    for i in cursor.fetchall():
-        print(i)
+   # sql3 = '''select * from election;'''
+    #cursor.execute(sql3)
+    #for i in cursor.fetchall():
+     #   print(i)
 
     conn.commit()
     conn.close()
