@@ -43,7 +43,7 @@ df = pd.DataFrame(data , columns=columns)
 df = df[~df.tweet.str.contains("RT")]
 #removes retweeted tweets
 df = df.reset_index(drop = True)
-print(df.time_created)
+
 
 
 conn_string = 'postgresql://myadmin:electionapi@dubem-postgres.carjb4cqbkhg.us-east-2.rds.amazonaws.com:5432/postgres'
