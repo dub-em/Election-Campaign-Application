@@ -72,5 +72,7 @@ sql2 = '''DELETE FROM election_tweets WHERE time_created < current_timestamp - i
 cursor.execute(sql2)
 conn.close()
 
+#2022-10-10 done
 #2022-10-09 done
 #2022-10-08 done
+
