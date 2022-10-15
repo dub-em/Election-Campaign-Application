@@ -67,6 +67,9 @@ for i in cursor.fetchall():
     print(i)
   
 
+sql2 = '''DELETE FROM election_tweets WHERE time_created < current_timestamp - interval '7' day;'''
+
+cursor.execute(sql2)
 conn.close()
 
 #2022-10-09 done
