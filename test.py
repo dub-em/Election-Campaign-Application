@@ -27,7 +27,7 @@ def time():
     from datetime import date
     import datetime
     today = datetime.date.today()
-    week_ago = datetime.date.today() - datetime.timedelta(days=4)
+    week_ago = datetime.date.today() - datetime.timedelta(days=2)
     yester = datetime.date.today() - datetime.timedelta(days=1)
     print(week_ago)
 

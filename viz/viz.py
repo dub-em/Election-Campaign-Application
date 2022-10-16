@@ -1,6 +1,8 @@
 import nltk
 nltk.download('punkt')
 nltk.download('wordnet')
+nltk.download('stopwords')
+from nltk.corpus import stopwords
 from nltk import sent_tokenize, word_tokenize
 from nltk.stem.snowball import SnowballStemmer
 from nltk.stem.wordnet import WordNetLemmatizer
@@ -9,7 +11,7 @@ import pandas as pd
 import numpy as np
 import re  
 import spacy
-nlp = spacy.load('en_core_web_lg')
+#nlp = spacy.load('en_core_web_lg')
 
 import tweepy
 import configparser
@@ -87,7 +89,6 @@ for line in all_sentences:
 
 lines = [re.sub(r'[^A-Za-z0-9]+', '', x) for x in lines]
 
-lines
 
 lines2 = []
 
@@ -95,42 +96,18 @@ for word in lines:
     if word != '':
         lines2.append(word)
 
-#This is stemming the words to their root
-from nltk.stem.snowball import SnowballStemmer
 
-# The Snowball Stemmer requires that you pass a language parameter
-s_stemmer = SnowballStemmer(language='english')
+# ...
+lines3 = [word for word in lines2 if word not in stopwords.words('english')]
 
-stem = []
-for word in lines2:
-    stem.append(s_stemmer.stem(word))
-    
-stem2 = []
+lines4 = [i for i in lines3 if len(i) >= 2]
 
-for word in stem:
-    if word not in nlp.Defaults.stop_words:
-        stem2.append(word)
-
-df = pd.DataFrame(stem2)
-
-df = df[0].value_counts()
-
-#This will give frequencies of our words
-
-from nltk.probability import FreqDist
-
-freqdoctor = FreqDist()
-
-for words in df:
-    freqdoctor[words] += 1
-
-#This is a simple plot that shows the top 20 words being used
-#df.plot(20)
-
-df = df[:20,]
+df1 = pd.DataFrame(lines4, columns= ['words'])
+df2 = df1.value_counts()
+df3 = (df2.head(10))
 plt.figure(figsize=(10,5))
-sns.barplot(df.values, df.index, alpha=0.8)
-plt.title('Top Words Overall')
+sns.barplot(df3.values, df3.index, alpha=0.8)
+plt.title('Top Organizations Mentioned')
 plt.ylabel('Word from Tweet', fontsize=12)
 plt.xlabel('Count of Words', fontsize=12)
 plt.show()

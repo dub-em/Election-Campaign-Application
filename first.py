@@ -12,7 +12,7 @@ config = configparser.ConfigParser()
 config.read("config.ini")
 
 today = datetime.date.today()
-week_ago = datetime.date.today() - datetime.timedelta(days=4)
+week_ago = datetime.date.today() - datetime.timedelta(days=2)
 yester = datetime.date.today() - datetime.timedelta(days=1)
 
 api_key = config['twitter']['api_key']
@@ -61,7 +61,7 @@ conn = psycopg2.connect(database="postgres",
 conn.autocommit = True
 cursor = conn.cursor()
   
-sql1 = '''select * from election;'''
+sql1 = '''SELECT COUNT(*) FROM election;'''
 cursor.execute(sql1)
 
 for i in cursor.fetchall():
@@ -70,7 +70,10 @@ for i in cursor.fetchall():
 
 conn.close()
 
-
+#2022-10-14 done
+#2022-10-13 done
+#2022-10-12 done
+#2022-10-11 done
 #2022-10-10 done
 #2022-10-09 done
 #2022-10-08 done
