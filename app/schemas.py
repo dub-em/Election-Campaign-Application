@@ -1,7 +1,7 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 import datetime
 
-class PostBase(BaseModel):
-    title: str 
-    content: str 
-    published: bool = True
+class GeneralResponse(BaseModel):
+    time_created: datetime.datetime 
+    tweet: str 
+    loca_tion: str
