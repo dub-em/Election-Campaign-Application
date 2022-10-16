@@ -12,7 +12,7 @@ config = configparser.ConfigParser()
 config.read("config.ini")
 
 today = datetime.date.today()
-week_ago = datetime.date.today() - datetime.timedelta(days=2)
+week_ago = datetime.date.today() - datetime.timedelta(days=1)
 yester = datetime.date.today() - datetime.timedelta(days=1)
 
 api_key = config['twitter']['api_key']
@@ -29,7 +29,7 @@ keywords = ['Buhari OR APC OR  PeterObi OR Tinubu OR PDP OR Atiku OR LabourParty
 #keywords = ['Buhari','APC', 'PeterObi','Tinubu','Atiku']
 #it seems the api does not return every tweet containing at least one or every keyword, it returns the only tweets that contains every keyword
 #solution was to use the OR in the keywords string as this is for tweets search only and might give errors in pure python
-limit = 10000
+limit = 500000
 
 tweets = tweepy.Cursor(api.search_tweets, q = keywords,count = 200, tweet_mode = 'extended',geocode='9.0820,8.6753,450mi', until=week_ago).items(limit)
 
