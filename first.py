@@ -12,7 +12,7 @@ config = configparser.ConfigParser()
 config.read("config.ini")
 
 today = datetime.date.today()
-week_ago = datetime.date.today() - datetime.timedelta(days=7)
+week_ago = datetime.date.today() - datetime.timedelta(days=1)
 yester = datetime.date.today() - datetime.timedelta(days=1)
 
 api_key = config['twitter']['api_key']
@@ -29,7 +29,7 @@ keywords = ['Buhari OR APC OR  PeterObi OR Tinubu OR PDP OR Atiku OR LabourParty
 #keywords = ['Buhari','APC', 'PeterObi','Tinubu','Atiku']
 #it seems the api does not return every tweet containing at least one or every keyword, it returns the only tweets that contains every keyword
 #solution was to use the OR in the keywords string as this is for tweets search only and might give errors in pure python
-limit = 10000
+limit = 500000
 
 tweets = tweepy.Cursor(api.search_tweets, q = keywords,count = 200, tweet_mode = 'extended',geocode='9.0820,8.6753,450mi', until=week_ago).items(limit)
 
@@ -61,7 +61,7 @@ conn = psycopg2.connect(database="postgres",
 conn.autocommit = True
 cursor = conn.cursor()
   
-sql1 = '''select * from election;'''
+sql1 = '''SELECT COUNT(*) FROM election;'''
 cursor.execute(sql1)
 
 for i in cursor.fetchall():
@@ -70,5 +70,10 @@ for i in cursor.fetchall():
 
 conn.close()
 
+#2022-10-14 done
+#2022-10-13 done
+#2022-10-12 done
+#2022-10-11 done
+#2022-10-10 done
 #2022-10-09 done
 #2022-10-08 done
