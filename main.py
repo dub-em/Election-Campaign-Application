@@ -37,9 +37,9 @@ def get_data():
     #keywords = ['Buhari','APC', 'PeterObi','Tinubu','Atiku']
     #it seems the api does not return every tweet containing at least one or every keyword, it returns the only tweets that contains every keyword
     #solution was to use the OR in the keywords string as this is for tweets search only and might give errors in pure python
-    limit = 1
+    limit = 10000
 
-    tweets = tweepy.Cursor(api.search_tweets, q = keywords,count = 200, tweet_mode = 'extended',geocode='9.0820,8.6753,450mi').items(limit)
+    tweets = tweepy.Cursor(api.search_tweets, q = keywords,count = 200, tweet_mode = 'extended',geocode='9.0820,8.6753,450mi',until=today).items(limit)
 
     columns = ['time_created', 'screen_name','name', 'tweet','loca_tion', 'descrip_tion','verified','followers', 'source','geo_enabled','retweet_count','truncated','lang','likes']
     data = []
