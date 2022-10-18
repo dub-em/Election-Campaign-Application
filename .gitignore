@@ -1,0 +1,4 @@
+update_notes.txt
+dist/
+__pycache__
+backup_dist/
