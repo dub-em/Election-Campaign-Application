@@ -26,7 +26,9 @@
     - This section covers what citizens's think about certain public office holders, their sentiment towards these individuals and their general popularity or notoriety.
 
 ### Further Documentation
-+ Please refer to ... for further documentation.
++ For further documentation, please refer to
+    - https://research-questions-api.herokuapp.com/docs#/
+    - https://research-questions-api.herokuapp.com/redoc 
 
 ### Contribution
 This Project is open to contribution and collaboration for now.
