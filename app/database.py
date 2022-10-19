@@ -4,6 +4,7 @@ from .config import settings
 import time
 
 def database_connection():
+    """A function to connect to the Postgres Remote Instance using the psycopg2 driver."""
     while True:
         try:
             conn = psycopg2.connect(host=settings.database_hostname, database=settings.database_name, 

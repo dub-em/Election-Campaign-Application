@@ -8,6 +8,7 @@ router = APIRouter(
 
 @router.get("/generaltrends", response_model=List[schemas.GeneralResponse])
 def get_alltweets():
+    """An endpoint to retrieve all tweets in the database, without any filters or limits."""
     conn, cursor = database.database_connection()
     cursor.execute("""SELECT * FROM election""")
     tweets = cursor.fetchall()
@@ -16,6 +17,7 @@ def get_alltweets():
 
 @router.get("/generaltrends/limit", response_model=List[schemas.GeneralResponse])
 def get_limitedtweets(limit: int):
+    """An endpoint to retrieve a limited number of tweets in the database."""
     conn, cursor = database.database_connection()
     cursor.execute("""SELECT * FROM election LIMIT {}""".format(str(limit)))
     tweets = cursor.fetchall()
@@ -24,6 +26,8 @@ def get_limitedtweets(limit: int):
 
 @router.get("/generaltrends/filter", response_model=List[schemas.GeneralResponse])
 def get_filteredtweets(filter: str):
+    """An endpoint to retrieve all tweets in the database, filtering the result by tweets using
+    whichever keywords or tags specified by the end-user."""
     conn, cursor = database.database_connection()
     cursor.execute("""SELECT * FROM election WHERE tweet LIKE '%{}%';""".format(filter))
     tweets = cursor.fetchall()
