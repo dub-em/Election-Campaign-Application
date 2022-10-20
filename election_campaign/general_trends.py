@@ -1,6 +1,9 @@
-import pandas
-import json
-import requests
+try:
+    import pandas
+    import json
+    import requests
+except:
+    print("Please install (pip install) and import the following python library (pandas, json, requests).")
 
 url = "https://research-questions-api.herokuapp.com/generaltrends/"
 
