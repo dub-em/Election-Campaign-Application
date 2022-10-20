@@ -1,19 +1,38 @@
+import nltk
+nltk.download('punkt')
+nltk.download('wordnet')
+nltk.download('stopwords')
+from nltk.corpus import stopwords
+from nltk import sent_tokenize, word_tokenize
+from nltk.stem.snowball import SnowballStemmer
+from nltk.stem.wordnet import WordNetLemmatizer
+from nltk.corpus import stopwords
+import pandas as pd
+import numpy as np
+import re  
+import spacy
+#nlp = spacy.load('en_core_web_lg')
+
 import tweepy
 import configparser
 import pandas as pd
 import psycopg2
 from datetime import date
-from config import settings
 import datetime 
 import psycopg2
 import pandas as pd
 from sqlalchemy import create_engine
 
+import matplotlib.pyplot as plt; plt.rcdefaults()
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 config = configparser.ConfigParser()
 config.read("config.ini")
 
 today = datetime.date.today()
-week_ago = datetime.date.today() - datetime.timedelta(days=1)
+week_ago = datetime.date.today() - datetime.timedelta(days=4)
 yester = datetime.date.today() - datetime.timedelta(days=1)
 
 api_key = config['twitter']['api_key']
@@ -30,9 +49,9 @@ keywords = ['Buhari OR APC OR  PeterObi OR Tinubu OR PDP OR Atiku OR LabourParty
 #keywords = ['Buhari','APC', 'PeterObi','Tinubu','Atiku']
 #it seems the api does not return every tweet containing at least one or every keyword, it returns the only tweets that contains every keyword
 #solution was to use the OR in the keywords string as this is for tweets search only and might give errors in pure python
-limit = 10000
+limit = 100
 
-tweets = tweepy.Cursor(api.search_tweets, q = keywords,count = 200, tweet_mode = 'extended',geocode='9.0820,8.6753,450mi', until=week_ago).items(limit)
+tweets = tweepy.Cursor(api.search_tweets, q = keywords,count = 200, tweet_mode = 'extended',geocode='9.0820,8.6753,450mi', until=yester).items(limit)
 
 columns = ['time_created', 'screen_name','name', 'tweet','loca_tion', 'descrip_tion','verified','followers', 'source','geo_enabled','retweet_count','truncated','lang','likes']
 data = []
@@ -45,37 +64,50 @@ df = pd.DataFrame(data , columns=columns)
 df = df[~df.tweet.str.contains("RT")]
 #removes retweeted tweets
 df = df.reset_index(drop = True)
-print(df.time_created)
+
+df = df.tweet
+
+all_sentences = []
+
+for word in df:
+    all_sentences.append(word)
+
+all_sentences
+#df1 = df.to_string()
+
+#df_split = df1.split()
+
+#df_split
+lines = list()
+for line in all_sentences:    
+    words = line.split()
+    for w in words: 
+       lines.append(w)
 
 
-conn_string = config['twitter']['conn_string']
-        
-db = create_engine(conn_string)
-conn = db.connect()
+#Removing Punctuation
 
-df.to_sql('election', con=conn, if_exists='append',
-        index=False)
-conn = psycopg2.connect(database=config['twitter']['name'],
-                            user=config['twitter']['user'], 
-                            password=config['twitter']['password'],
-                            host=config['twitter']['hostname']
-    )
-conn.autocommit = True
-cursor = conn.cursor()
-  
-sql1 = '''SELECT COUNT(*) FROM election;'''
-cursor.execute(sql1)
+lines = [re.sub(r'[^A-Za-z0-9]+', '', x) for x in lines]
 
-for i in cursor.fetchall():
-    print(i)
-  
 
-conn.close()
+lines2 = []
 
-#2022-10-14 done
-#2022-10-13 done
-#2022-10-12 done
-#2022-10-11 done
-#2022-10-10 done
-#2022-10-09 done
-#2022-10-08 done
+for word in lines:
+    if word != '':
+        lines2.append(word)
+
+
+# ...
+lines3 = [word for word in lines2 if word not in stopwords.words('english')]
+
+lines4 = [i for i in lines3 if len(i) >= 2]
+
+df1 = pd.DataFrame(lines4, columns= ['words'])
+df2 = df1.value_counts()
+df3 = (df2.head(10))
+plt.figure(figsize=(10,5))
+sns.barplot(df3.values, df3.index, alpha=0.8)
+plt.title('Top Organizations Mentioned')
+plt.ylabel('Word from Tweet', fontsize=12)
+plt.xlabel('Count of Words', fontsize=12)
+plt.show()
