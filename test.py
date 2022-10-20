@@ -31,4 +31,30 @@ def time():
     yester = datetime.date.today() - datetime.timedelta(days=1)
     print(week_ago)
 
-time()
+def email():
+    import os
+    import ssl
+    import smtplib
+    from email import encoders
+    from email.mime.base import MIMEBase
+    from email.mime.multipart import MIMEMultipart
+    from email.mime.text import MIMEText
+    from typing import Any, cast, List
+
+    from prefect import Task
+    from prefect.client import Secret
+    from prefect.utilities.tasks import defaults_from_attrs
+    prefect.tasks.notifications.email_task.EmailTask.run(
+        subject='TESTING', 
+        msg='it works', 
+        email_to='georgemichaeldagogo@gmail.com', 
+        email_from=None, 
+        smtp_server=None, 
+        smtp_port=25, 
+        smtp_type="INSECURE", 
+        msg_plain=None, 
+        email_to_cc=None, 
+        email_to_bcc=None, 
+        attachments=None)
+
+email()

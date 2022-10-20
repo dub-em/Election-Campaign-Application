@@ -4,6 +4,7 @@ def app():
     import pandas as pd
     import psycopg2
     from datetime import date
+    from .config import settings
     import datetime 
     import psycopg2
     import pandas as pd
@@ -21,10 +22,10 @@ def app():
 
     @task(max_retries=3, retry_delay=datetime.timedelta(seconds=5))
     def get_data():
-        api_key = config['twitter']['api_key']
-        api_key_secret = config['twitter']['api_key_secret']
-        access_token = config['twitter']['access_token']
-        access_token_secret = config['twitter']['access_token_secret']
+        api_key = settings.api_key
+        api_key_secret = settings.api_key_secret
+        access_token = settings.access_token
+        access_token_secret = settings.access_token_secret
 
         auth = tweepy.OAuthHandler(api_key,api_key_secret)
         auth.set_access_token(access_token,access_token_secret)
@@ -35,7 +36,7 @@ def app():
         #keywords = ['Buhari','APC', 'PeterObi','Tinubu','Atiku']
         #it seems the api does not return every tweet containing at least one or every keyword, it returns the only tweets that contains every keyword
         #solution was to use the OR in the keywords string as this is for tweets search only and might give errors in pure python
-        limit = 10000
+        limit = 1
 
         tweets = tweepy.Cursor(api.search_tweets, q = keywords,count = 200, tweet_mode = 'extended',geocode='9.0820,8.6753,450mi', until=today).items(limit)
 
@@ -53,16 +54,16 @@ def app():
         print(df.time_created)
 
 
-        conn_string = 'postgresql://myadmin:electionapi@dubem-postgres.carjb4cqbkhg.us-east-2.rds.amazonaws.com:5432/postgres'
+        conn_string = settings.conn_string
         
         db = create_engine(conn_string)
         conn = db.connect()
 
         df.to_sql('election', con=conn, if_exists='append',
                 index=False)
-        conn = psycopg2.connect(database="postgres",
-                                    user='myadmin', password='electionapi',
-                                    host='dubem-postgres.carjb4cqbkhg.us-east-2.rds.amazonaws.com', port='5432'
+        conn = psycopg2.connect(database=settings.name,
+                                    user=settings.user, password=settings.password,
+                                    host=settings.hostname, port=settings.port
             )
         conn.autocommit = True
         cursor = conn.cursor()
@@ -95,3 +96,5 @@ def app():
     flow=flow_caso(schedule)
 
     flow.run()
+
+app()
