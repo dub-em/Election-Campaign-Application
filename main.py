@@ -4,7 +4,6 @@ def app():
     import pandas as pd
     import psycopg2
     from datetime import date
-    from .config import settings
     import datetime 
     import psycopg2
     import pandas as pd
@@ -22,11 +21,10 @@ def app():
 
     @task(max_retries=3, retry_delay=datetime.timedelta(seconds=5))
     def get_data():
-        api_key = settings.api_key
-        api_key_secret = settings.api_key_secret
-        access_token = settings.access_token
-        access_token_secret = settings.access_token_secret
-
+        api_key = config['twitter']['api_key']
+        api_key_secret = config['twitter']['api_key_secret']
+        access_token = config['twitter']['access_token']
+        access_token_secret = config['twitter']['access_token_secret']
         auth = tweepy.OAuthHandler(api_key,api_key_secret)
         auth.set_access_token(access_token,access_token_secret)
 
@@ -54,16 +52,17 @@ def app():
         print(df.time_created)
 
 
-        conn_string = settings.conn_string
+        conn_string = config['twitter']['conn_string']
         
         db = create_engine(conn_string)
         conn = db.connect()
 
         df.to_sql('election', con=conn, if_exists='append',
                 index=False)
-        conn = psycopg2.connect(database=settings.name,
-                                    user=settings.user, password=settings.password,
-                                    host=settings.hostname, port=settings.port
+        conn = psycopg2.connect(database=config['twitter']['name'],
+                                    user=config['twitter']['user'], 
+                                    password=config['twitter']['password'],
+                                    host=config['twitter']['hostname']
             )
         conn.autocommit = True
         cursor = conn.cursor()

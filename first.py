@@ -3,6 +3,7 @@ import configparser
 import pandas as pd
 import psycopg2
 from datetime import date
+from config import settings
 import datetime 
 import psycopg2
 import pandas as pd
@@ -29,7 +30,7 @@ keywords = ['Buhari OR APC OR  PeterObi OR Tinubu OR PDP OR Atiku OR LabourParty
 #keywords = ['Buhari','APC', 'PeterObi','Tinubu','Atiku']
 #it seems the api does not return every tweet containing at least one or every keyword, it returns the only tweets that contains every keyword
 #solution was to use the OR in the keywords string as this is for tweets search only and might give errors in pure python
-limit = 500000
+limit = 5
 
 tweets = tweepy.Cursor(api.search_tweets, q = keywords,count = 200, tweet_mode = 'extended',geocode='9.0820,8.6753,450mi', until=week_ago).items(limit)
 
@@ -47,16 +48,17 @@ df = df.reset_index(drop = True)
 print(df.time_created)
 
 
-conn_string = 'postgresql://myadmin:electionapi@dubem-postgres.carjb4cqbkhg.us-east-2.rds.amazonaws.com:5432/postgres'
-  
+conn_string = config['twitter']['conn_string']
+        
 db = create_engine(conn_string)
 conn = db.connect()
 
 df.to_sql('election', con=conn, if_exists='append',
-          index=False)
-conn = psycopg2.connect(database="postgres",
-                            user='myadmin', password='electionapi',
-                            host='dubem-postgres.carjb4cqbkhg.us-east-2.rds.amazonaws.com', port='5432'
+        index=False)
+conn = psycopg2.connect(database=config['twitter']['name'],
+                            user=config['twitter']['user'], 
+                            password=config['twitter']['password'],
+                            host=config['twitter']['hostname']
     )
 conn.autocommit = True
 cursor = conn.cursor()
