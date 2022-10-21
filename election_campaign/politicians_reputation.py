@@ -7,6 +7,12 @@ except:
 
 url = "https://research-questions-api.herokuapp.com/politicians_reputation/"
 
+def get_listofpoliticians():
+    list_of_politicians = ['PeterObi','Peter Obi','PO','AA','AtikuAbubakar',
+                       'Atiku Abubakar','Bola Ahmed Tinubu','Bola Tinubu',
+                       'BAT','Tinubu']
+    return list_of_politicians
+
 def get_alltweets(filter=None, data_type=None):
     """An endpoint to retrieve all tweets in the database, filtering the result by tweets using
     whichever name of a public office holder specified by the end-user.
@@ -23,10 +29,11 @@ def get_alltweets(filter=None, data_type=None):
     data
         The filtered result of the api request in the data format specified by the end user.
     """
-    
+    list_of_politicians = get_listofpoliticians()
+
     if filter == None:
-        return ("Please specify an string (keyword) for the filter!")
-    elif type(filter) == str:
+        return ("Please specify a string (keyword) for the filter!")
+    elif filter in list_of_politicians:
         url_temp = url + "filter?filter=" + filter
         request = requests.get(url = url_temp)
         data = request.json()
@@ -38,12 +45,12 @@ def get_alltweets(filter=None, data_type=None):
             data = pandas.read_json(data)
             return data
         else:
-            return ("Incorrect or unavailable specified data type!")
+            return ("Incorrect or unavailable specified data type!")    
     else:
-        return ("Please specify an string (keyword) for the filter!")
+        return (f"'{filter}' is not a string or does not exist in the list of Politicians!")
 
     
-def count_alltweets(filter=None, data_type=None):
+def count_alltweets(filter=None):
     """An endpoint to count all tweets in the database, filtering the result by tweets using
     whichever name of a public office holder specified by the end-user.
 
@@ -51,29 +58,21 @@ def count_alltweets(filter=None, data_type=None):
     ----------
     filter: str
         The string (keyword) specified by the end user to filter the result of the query by tweets.
-    data_type : None, "json" or "pandas.dataframe"
-        The preferred data type of the result of the api request, as specified by the end user.
 
     Returns
     -------
     data
         The filtered result of the api request in the data format specified by the end user.
     """
-    
+    list_of_politicians = get_listofpoliticians()
+
     if filter == None:
-        return ("Please specify an string (keyword) for the filter!")
-    elif type(filter) == str:
+        return ("Please specify a string (keyword) for the filter!")
+    elif filter in list_of_politicians:
         url_temp = url + "filter_count?filter=" + filter
         request = requests.get(url = url_temp)
         data = request.json()
         data = json.dumps(data)
-        
-        if (data_type == None) or (data_type == "json"):
-            return data
-        elif data_type == "pandas.dataframe":
-            data = pandas.read_json(data)
-            return data
-        else:
-            return ("Incorrect or unavailable specified data type!")
+        return data
     else:
-        return ("Please specify an string (keyword) for the filter!")
+        return (f"'{filter}' is not a string or does not exist in the list of Politicians!")

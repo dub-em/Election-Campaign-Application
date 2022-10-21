@@ -87,7 +87,7 @@ def get_filteredtweets(filter=None, data_type=None):
     """
     
     if filter == None:
-        return ("Please specify an string (keyword) for the filter!")
+        return ("Please specify a string (keyword) for the filter!")
     elif type(filter) == str:
         url_temp = url + "filter?filter=" + filter
         request = requests.get(url = url_temp)
@@ -102,4 +102,4 @@ def get_filteredtweets(filter=None, data_type=None):
         else:
             return ("Incorrect or unavailable specified data type!")
     else:
-        return ("Please specify an string (keyword) for the filter!")
+        return ("Please specify a string (keyword) for the filter!")
