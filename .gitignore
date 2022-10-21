@@ -4,3 +4,4 @@ __pycache__
 backup_dist/
 support_file.ipynb
 .ipynb_checkpoints/
+election_campaign.egg-info/
