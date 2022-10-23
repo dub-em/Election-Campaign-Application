@@ -3,7 +3,7 @@ import configparser
 import pandas as pd
 import psycopg2
 from datetime import date
-from config import settings
+from .config import settings
 import datetime 
 import psycopg2
 import pandas as pd

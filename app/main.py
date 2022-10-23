@@ -10,6 +10,11 @@ def app():
     from sqlalchemy import create_engine
     from prefect import Flow,task
     from prefect.schedules import IntervalSchedule
+    from .config import settings
+    from .database import database_connection
+
+    conn, cursor = database_connection()
+    conn.close()
 
     #pip install "prefect==1.*"
     today = datetime.date.today()
@@ -21,10 +26,10 @@ def app():
 
     @task(max_retries=3, retry_delay=datetime.timedelta(seconds=5))
     def get_data():
-        api_key = config['twitter']['api_key']
-        api_key_secret = config['twitter']['api_key_secret']
-        access_token = config['twitter']['access_token']
-        access_token_secret = config['twitter']['access_token_secret']
+        api_key = settings.api_key
+        api_key_secret = settings.api_key_secret
+        access_token = settings.access_token
+        access_token_secret = settings.access_token_secret
         auth = tweepy.OAuthHandler(api_key,api_key_secret)
         auth.set_access_token(access_token,access_token_secret)
 
@@ -34,7 +39,7 @@ def app():
         #keywords = ['Buhari','APC', 'PeterObi','Tinubu','Atiku']
         #it seems the api does not return every tweet containing at least one or every keyword, it returns the only tweets that contains every keyword
         #solution was to use the OR in the keywords string as this is for tweets search only and might give errors in pure python
-        limit = 1
+        limit = 10
 
         tweets = tweepy.Cursor(api.search_tweets, q = keywords,count = 200, tweet_mode = 'extended',geocode='9.0820,8.6753,450mi', until=today).items(limit)
 
@@ -57,20 +62,20 @@ def app():
         db = create_engine(conn_string)
         conn = db.connect()
 
-        df.to_sql('election', con=conn, if_exists='append',
+        df.to_sql('election_dummy', con=conn, if_exists='append',
                 index=False)
-        conn = psycopg2.connect(database=config['twitter']['name'],
-                                    user=config['twitter']['user'], 
-                                    password=config['twitter']['password'],
-                                    host=config['twitter']['hostname']
+        conn = psycopg2.connect(database=settings.database_name,
+                                    user=settings.database_user, 
+                                    password=settings.database_password,
+                                    host=settings.database_hostname
             )
         conn.autocommit = True
         cursor = conn.cursor()
         
-        sql1 = '''DELETE FROM election WHERE time_created < current_timestamp - interval '7' day;'''
+        sql1 = '''DELETE FROM election_dummy WHERE time_created < current_timestamp - interval '7' day;'''
         cursor.execute(sql1)
 
-        sql2 = '''SELECT COUNT(*) FROM election;'''
+        sql2 = '''SELECT COUNT(*) FROM election_dummy;'''
         cursor.execute(sql2)
 
         for i in cursor.fetchall():
