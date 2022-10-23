@@ -31,7 +31,7 @@
     - https://research-questions-api.herokuapp.com/redoc 
 
 ### Contribution
-This Project is open to contribution and collaboration for now.
+This Project is open to contribution and collaboration.
 
 ### Author
 + Main Maintainer: Michael Dubem Igbomezie
