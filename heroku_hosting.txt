@@ -1,0 +1,57 @@
+Step 1 - Install the Heroku CLI on your Computer (You can find the procedure here for all OS https://devcenter.heroku.com/articles/heroku-cli)
+
+You can skip this step if you already have Heroku installed on your computer.
+
+Step 2 - Go to Heroku website (heroku.com), login and create a new App; choose a meaningful name for your App.
+
+Step 3 - Now we need to add a python build path, head over to Settings>Add Build Path>Select the Python Option
+
+Deploying Our Script
+Before you can deploy an app to Heroku, you need to add Two Important Files which are the Procfile & requirements.txt file
+
+Procfile Setup
+Open your project in your favourite code Editor or Navigate to your project directory and create a file named Procfile
+
+Next, using any code editor like VSCode or TextEdit, open the Profile, and replace any text already prevalent with:
+
+web: python main.py
+worker: python main.py
+
+If you encounter any errors like app crash then remove "web python main.py"
+
+Requirements.txt File Setup
+The requirements.txt file makes it easier for Heroku to install the correct versions of the required Python libraries (or “packages”) to run your Python code.
+
+We are going to tell Heroku packages to install using our requirements.txt
+
+Open Your project folder On your Command Line Interface (CLI) inside your environment use the following command:
+
+# install
+pip3 install pipreqs
+
+# Run in current directory
+python3 -m  pipreqs.pipreqs
+
+Deploying to Heroku
+Now, it is time to deploy our python script to Heroku.
+
+To do this, Open Your project folder On your Command Line Interface (CLI) inside your environment use the following command:
+
+heroku login
+heroku git:remote -a NAME_OF_YOUR_HEROKU_APP
+git add .
+git commit -m "Deployment commit"
+git push heroku main
+
+Running the App or bot on Heroku
+This is the final step! Now in order to turn on/execute our script, we have to open up our app on the Heroku Website, go to Resources, and hit edit on our worker.
+
+- Enable both the web and worker, then save.
+
+Note: It can take up to two minutes for the script to start running!
+
+If your app is still not working, on your Terminal, run:
+
+heroku ps:scale worker=1
+
+source: https://medium.com/tech-insights/how-to-deploy-a-python-script-or-bot-to-heroku-in-5-minutes-a82de2d3ed40
