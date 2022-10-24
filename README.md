@@ -43,4 +43,4 @@ This Project is open to contribution and collaboration. Feel free to connect to 
     - Pypi: https://pypi.org/user/Dubem/
 + George Michael Dagogo
     - Email: georgemichaeldagogo@gmail.com
-    - Github: @GeeKaizer
+    - Github: @George-Michael-Dagogo
