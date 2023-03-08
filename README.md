@@ -33,6 +33,9 @@
 ### Further Description
 + Please refer to the various branches for further description and view of the source codes.
 
+### Article
++ https://www.linkedin.com/pulse/citizens-voice-michael-igbomezie/
+
 ### Contribution
 This Project is open to contribution and collaboration. Feel free to connect to join the project collaborators.
 
