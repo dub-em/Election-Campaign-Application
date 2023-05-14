@@ -33,6 +33,9 @@
 ### Further Description
 + Please refer to the various branches for further description and view of the source codes.
 
+### Phase 1 Project Flow
+![alt text](https://github.com/dub-em/Election-Campaign-Application-Phase2/blob/main/Project_Conclusion/ProjectFlow/Phase1_ProjectFlow.png?raw=true)
+
 ### Article
 + https://www.linkedin.com/pulse/citizens-voice-michael-igbomezie/
 
